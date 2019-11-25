@@ -1,96 +1,59 @@
 import random
 import msvcrt
-
+import time
 import os
-class Elevator:
-    def __init__(self):
-        self.maxP = 10
-        self.nowP = 0
-        self.floorNow = 0
-        self.floorNext = 1
-        self.person = []
-    def enterP(self,Floor):
-        while self.nowP != self.maxP and Floor.getnumP() > 0:
-            self.person.append(Floor.getpeople())
-            self.nowP+=1
-        if self.nowP != 0:
-            for i in self.person:
-                if i.getFloor() == self.floorNow:
-                    self.person.remove(i)
-                    self.nowP-=1
-        try:
-            self.floorNext = self.person[0].getFloor()
-        except:
-            self.floorNext = 0
-
-    def getfloorNow(self):
-        return self.floorNow
-    def getnowP(self):
-        return self.nowP
-
-
-    def trevel(self,floors):
-        if self.nowP == self.maxP:
-            self.floorNow = self.floorNext
-        elif self.floorNow<len(floors)-1:
-            self.floorNow +=1
-        else:
-            self.floorNow = self.floorNext
-
-
-
-class Floor:
-    def __init__(self, num):
-        self.numF = num
-        self.numP = []
-
-    def setnumP(self,people):
-        self.numP.append(people)
-
-    def getnumP(self):
-        return len(self.numP)
-    def getpeople(self):
-        return self.numP.pop()
-    def __str__(self):
-        return "F"+str(self.numF) + " P:" + peopleprint(self.numP)
-    def getnumF(self):
-        return self.numF
-
-
-
-class People:
-    def __init__(self, floorMax):
-        self.needF = random.randint(1,floorMax)
-    def __str__(self):
-        return " ("+ str(self.needF)+ ") "
-    def getFloor(self):
-        return self.needF
+from Elevator import*
+from Floor import*
+from People import*
 
 elevator = Elevator()
 Fl = []
 people = []
 def printe():
-    for i in range(5):
+    for i in range(7):
         floor = Floor(i)
-        p = People(4)
+        p = People(6)
         floor.setnumP(p)
         Fl.append(floor)
-
-def peopleprint(l):
-    out = ""
-    for i in l:
-         out += str(i)
-    return out
-printe()
-
-while True:
+def addPeople(x = 3):
+    for j in range(1,random.randint(1,x)):
+        for i in range(0,random.randint(1,len(Fl))):
+            p = People(len(Fl)-1)
+            Fl[i].setnumP(p)
+def printB():
     for i in Fl:
-        if elevator.getfloorNow() == i.getnumF():
-            print(i, end= ' ')
-            print("  ["+ str(elevator.getnowP()) + "]")
+        if elevator[0].getfloorNow() == i.getnumF() and elevator[1].getfloorNow() == i.getnumF():
+            print(i, end=' ')
+            print("  [" + str(elevator[0].getnowP()) + "]" +"  [" + str(elevator[1].getnowP()) + "]")
+            elevator[0].enterP(i)
+            elevator[1].enterP(i)
+        elif elevator[1].getfloorNow() == i.getnumF() and elevator[0].getfloorNow() != i.getnumF():
+            print(i, end=' ')
+            print("  [" + str(elevator[1].getnowP()) + "]")
+            elevator[1].enterP(i)
+        elif elevator[0].getfloorNow() == i.getnumF() and elevator[1].getfloorNow() != i.getnumF():
+            print(i, end=' ')
+            print("  [" + str(elevator[0].getnowP()) + "]")
+            elevator[1].enterP(i)
+        else:
+            print(i)
+def printG():
+    for i in Fl:
+        if elevator.getfloorNow() == i.getnumF() :
+            print(i, end=' ')
+            print("  [" + str(elevator.getnowP()) + "]")
             elevator.enterP(i)
         else:
             print(i)
-    elevator.trevel(Fl)
-    print("\n\n")
+def proccess():
+    while True:
+        time.sleep(1)
+        printG()
+        elevator.trevel(Fl)
+        if time.clock()%30 >=0 and time.clock()%30<6:
+            addPeople(5)
+        print("\n\n")
 
+
+printe()
+proccess()

@@ -49,10 +49,11 @@ def proccess():
     while True:
         time.sleep(1)
         printG()
-        elevator.trevel(Fl)
+        elevator.trevelt(Fl)
         if time.clock()%30 >=0 and time.clock()%30<6:
             addPeople(5)
         print("\n\n")
+
 
 
 printe()

@@ -6,7 +6,7 @@ import os
 from Elevator import*
 from Floor import*
 from People import*
-floors = [200,170,140,110,80,50,20]
+floors = [180,150,130,90,60,30,0]
 
 elevator = Elevator()
 Fl = []
@@ -23,24 +23,35 @@ def addPeople(x = 3):
             p = People(len(Fl)-1)
             Fl[i].setnumP(p)
 
-def proccess(el):
-    while True:
+def proccess(el,build1,c,elt):
         time.sleep(1)
         for i in Fl:
             if elevator.getfloorNow() == i.getnumF():
                 elevator.enterP(i)
-        elevator.trevel(Fl,el,floors)
+        elevator.trevel(Fl,el,floors,c,elt)
         if time.clock()%30 >=0 and time.clock()%30<6:
             addPeople(5)
-
 def butt1():
     build1 = Toplevel(root)
     build1.minsize(width=200,height=300)
+    c = Canvas(build1,width = 200, height = 300, bg = 'white')
+    c.pack()
     printe()
-    Fl[0].build1(build1)
-    el = Label(build1,text = "lift" + " [" + str(elevator.getnowP()) + "]")
-    el.place(x = 120,y = floors[0])
-    proccess(el)
+    Fl[0].build1(build1,c)
+    el = c.create_rectangle(100,floors[0],130,floors[0]+20,outline='BLACK')
+    elt = c.create_text(115,floors[0]+10,text = "[" + str(elevator.getnowP()) + "]")
+    while True:
+        proccess(el,build1,c,elt)
+
+
+
+    #el = Button(build1,text = "lift" + " [" + str(elevator.getnowP()) + "]")
+    #el.place(x = 120,y = floors[0])
+    #while True:
+    #    proccess(el,build1)
+     #   el.configure(text = "lift" + " [" + str(elevator.getnowP()) + "]")
+      #  build1.update()
+       # build1.mainloop()
 
 
 

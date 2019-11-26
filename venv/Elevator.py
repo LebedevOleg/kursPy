@@ -3,6 +3,7 @@ from Floor import*
 from People import*
 from tkinter import *
 from queue import Queue
+import time
 class Elevator:
     def __init__(self):
         self.maxP = 10
@@ -32,7 +33,7 @@ class Elevator:
         return self.nowP
 
 
-    def trevel(self,floors):
+    def trevelt(self,floors):
         if self.nowP >0 and self.floorNext != 0:
             self.floorNow = self.floorNext
         elif self.floorNext == 0:
@@ -42,14 +43,21 @@ class Elevator:
                     break
             self.floorNow = self.floorNext
 
-    def trevel(self,floors,el,fl):
+    def trevel(self,floors,el,fl,c,elt):
         if self.nowP >0 and self.floorNext != 0:
+            for i in range(0,abs(self.floorNext-self.floorNow)):
+                time.sleep(0.3)
+            c.move(el, 0, fl[self.floorNow] - fl[self.floorNext])
+            c.move(elt, 0, fl[self.floorNow] - fl[self.floorNext])
             self.floorNow = self.floorNext
-            el.configure(height = fl[self.floorNow])
         elif self.floorNext == 0:
             for i in floors:
                 if i.getnumP() != 0:
                     self.floorNext = i.getnumF()
                     break
+            for i in range(0,abs(self.floorNext-self.floorNow)):
+                time.sleep(0.3)
+            c.move(el, 0, fl[self.floorNow] - fl[self.floorNext])
+            c.move(elt, 0, fl[self.floorNow] - fl[self.floorNext])
             self.floorNow = self.floorNext
-            el.configure(height=fl[self.floorNow])
+

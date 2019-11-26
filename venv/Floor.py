@@ -21,21 +21,14 @@ class Floor:
         for i in self.numP:
             if i.getFloor() == self.numF:
                 self.numP.remove(i)
-    def build1(self,build1):
-        lb1 = Label(build1, text="Floor7")
-        lb1.place(x=80, y=20)
-        lb2 = Label(build1, text="Floor6")
-        lb2.place(x=80, y=50)
-        lb3 = Label(build1, text="Floor5")
-        lb3.place(x=80, y=80)
-        lb4 = Label(build1, text="Floor4")
-        lb4.place(x=80, y=110)
-        lb5 = Label(build1, text="Floor3")
-        lb5.place(x=80, y=140)
-        lb6 = Label(build1, text="Floor2")
-        lb6.place(x=80, y=170)
-        lb7 = Label(build1, text="Floor1")
-        lb7.place(x=80, y=200)
+    def build1(self,build1,c):
+        c.create_text(50, 20, text="Floor7")
+        c.create_text(50, 50, text="Floor6")
+        c.create_text(50, 80,  text="Floor5")
+        c.create_text(50, 110, text="Floor4")
+        c.create_text(50, 140,  text="Floor3")
+        c.create_text(50, 170,  text="Floor2")
+        c.create_text(50, 200,  text="Floor1")
 
 
 

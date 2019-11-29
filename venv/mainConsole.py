@@ -54,7 +54,9 @@ def proccess():
             addPeople(5)
         print("\n\n")
 
-
-
-printe()
-proccess()
+def test():
+  t1 = "aa"
+  print(int(t1))
+#printe()
+#proccess()
+test()

@@ -6,6 +6,9 @@ from queue import Queue
 import time
 class Elevator:
     def __init__(self):
+        self.allsummt = 0 #Техническая переменная для счета среднего времени пребывания пассажира в лифте
+        self.allP = 0
+        self.twait = 0
         self.maxP = 10
         self.nowP = 0
         self.floorNow = 0
@@ -20,12 +23,15 @@ class Elevator:
         if self.nowP != 0:
             for i in self.person:
                 if i.getFloor() == self.floorNow:
+                    i.settimeE()
+                    self.timer(i)
                     self.person.remove(i)
                     self.nowP-=1
         try:
             self.floorNext = self.floorQueue.get()
         except:
             self.floorNext = 0
+            print("Ошибка")
 
     def getfloorNow(self):
         return self.floorNow
@@ -47,8 +53,8 @@ class Elevator:
         if self.nowP >0 and self.floorNext != 0:
             for i in range(0,abs(self.floorNext-self.floorNow)):
                 time.sleep(0.3)
-            c.move(el, 0, fl[self.floorNow] - fl[self.floorNext])
-            c.move(elt, 0, fl[self.floorNow] - fl[self.floorNext])
+            c.coords(el,100,fl[self.floorNext],130,fl[self.floorNext]+20)
+            c.coords(elt,115,fl[self.floorNext]+10)
             self.floorNow = self.floorNext
         elif self.floorNext == 0:
             for i in floors:
@@ -57,7 +63,12 @@ class Elevator:
                     break
             for i in range(0,abs(self.floorNext-self.floorNow)):
                 time.sleep(0.3)
-            c.move(el, 0, fl[self.floorNow] - fl[self.floorNext])
-            c.move(elt, 0, fl[self.floorNow] - fl[self.floorNext])
+            c.coords(el, 100, fl[self.floorNext], 130, fl[self.floorNext] + 20)
+            c.coords(elt, 115, fl[self.floorNext] + 10)
             self.floorNow = self.floorNext
-
+    def timer(self,i):
+     self.allsummt += i.gettwaitE()
+     self.allP +=1
+     self.twait = self.allsummt/self.allP
+    def getTwait(self):
+        return str(self.twait)

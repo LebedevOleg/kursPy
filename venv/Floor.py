@@ -44,5 +44,9 @@ class Floor:
         c.create_text(50, 170,  text="Floor2")
         c.create_text(50, 200,  text="Floor1")
 
+    def build2(self, build2, c,numF):
+        temp = 20
+        for i in range(numF):
+            c.create_text(50,temp + i*30,text = "Floor" + str(numF - i))
 
 

@@ -30,7 +30,7 @@ class Elevator:
         try:
             self.floorNext = self.floorQueue.get()
         except:
-            self.floorNext = 0
+            self.floorNext = -1
             print("Ошибка")
 
     def getfloorNow(self):
@@ -56,19 +56,28 @@ class Elevator:
             c.coords(el,100,fl[self.floorNext],130,fl[self.floorNext]+20)
             c.coords(elt,115,fl[self.floorNext]+10)
             self.floorNow = self.floorNext
-        elif self.floorNext == 0:
+        elif self.floorNext == -1:
             for i in floors:
                 if i.getnumP() != 0:
                     self.floorNext = i.getnumF()
                     break
-            for i in range(0,abs(self.floorNext-self.floorNow)):
-                time.sleep(0.3)
+            if self.floorNext != 0:
+                for i in range(0,abs(self.floorNext-self.floorNow)):
+                    time.sleep(0.3)
+            else:
+                if self.floorNext +1 > len(floors)-1:
+                    self.floorNext +=1
+                else:
+                    self.floorNext = 0
             c.coords(el, 100, fl[self.floorNext], 130, fl[self.floorNext] + 20)
             c.coords(elt, 115, fl[self.floorNext] + 10)
             self.floorNow = self.floorNext
+
     def timer(self,i):
      self.allsummt += i.gettwaitE()
      self.allP +=1
      self.twait = self.allsummt/self.allP
     def getTwait(self):
         return str(self.twait)
+    def getAllsumm(self):
+        return self.allsummt

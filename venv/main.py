@@ -2,14 +2,15 @@ from tkinter import *
 import random
 import msvcrt
 import time
+import traceback
 from tkinter import messagebox
 import os
 from Elevator import*
 from Floor import*
 from People import*
-from ProgramTK.Customizer import butt2
-floors = [190,160,130,100,70,40,10]
+from Customizer import butt2
 
+floors = [190,160,130,100,70,40,10]
 elevator = Elevator()
 Fl = []
 def printe():
@@ -24,17 +25,18 @@ def addPeople(x = 3):
             p = People(len(Fl)-1)
             Fl[i].setnumP(p)
 
-def proccess(el,build1,c,elt):
-        for i in Fl:
-            if elevator.getfloorNow() == i.getnumF():
-                elevator.enterP(i)
-        elevator.trevel(Fl,el,floors,c,elt)
-        if time.clock()%30 >=0 and time.clock()%30<6:
-            addPeople(5)
+# def proccess(el,build1,c,elt):
+#         for i in Fl:
+#             if elevator.getfloorNow() == i.getnumF():
+#                 elevator.enterP(i)
+#         elevator.trevel(Fl,el,floors,c,elt)
+#         if time.clock()%30 >=0 and time.clock()%30<6:
+#             addPeople(5)
+
 def floorwait():
     wait = 0
     for i in Fl:
-        wait = i.getAllsumm()
+        wait += i.getAllsumm()
     wait = wait/len(Fl)
     return str(wait)
 def butt1():
@@ -55,14 +57,17 @@ def butt1():
     f5 = c.create_text(80, 80, text="(" + str(Fl[4].getnumP()) + ")")
     f6 = c.create_text(80, 50, text="(" + str(Fl[5].getnumP()) + ")")
     f7 = c.create_text(80, 20, text="(" + str(Fl[6].getnumP()) + ")")
+    build1.update()
     while True:
 #startreg process
         for i in Fl:
             if elevator.getfloorNow() == i.getnumF():
                 elevator.enterP(i)
         elevator.trevel(Fl, el, floors, c, elt)
-        if time.clock() % 30 >= 0 and time.clock() % 30 < 6:
+        if time.clock() % 30 >= 0 and time.clock() % 30 < 4:
             addPeople(5)
+        else:
+            addPeople()
 #endreg
         c.itemconfig(waitE,text = "Среднее время \nожидания в лифте: "+  elevator.getTwait())
         c.itemconfig(waitF,text = "Среднее время \nожидания на этаже: "+ floorwait() )
@@ -91,12 +96,12 @@ def com1(textA,textB):
     numF = textA.get()
     numE = textB.get()
     try:
-      if int(numF) <0 and int(numE) < 0:
+      if int(numF) <0 or int(numE) < 0:
             messagebox.showinfo("Error","Вы ввели неправильные данные")
       else:
-            butt2(root,numF,numE)
+            butt2(root,int(numF),int(numE))
     except:
-        messagebox.showinfo("Error", "Вы ввели неправильные данные")
+        messagebox.showinfo("Error", traceback.format_exc() )
 
 
 root =Tk()

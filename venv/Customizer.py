@@ -60,8 +60,8 @@ def butt2(root,numF,numE):
         elt = c.create_text(115 + i*40,floors[0]+10,text = "[" + str(elevator[i].getnowP()) + "]")
         elev.append(el)
         elevt.append(elt)
-    waitE = c.create_text(460,30,text = "Среднее время \nожидания в лифте: ",anchor = W)
-    waitF = c.create_text(460,80,text = "Среднее время \nожидания на этаже: ",anchor = W)
+    waitE = c.create_text(430,30,text = "Среднее время \nожидания в лифте: ",anchor = W)
+    waitF = c.create_text(430,80,text = "Среднее время \nожидания на этаже: ",anchor = W)
     for i in range(numF):
         f = c.create_text(80,floors[i]+10 ,text = "(" + str(Fl[i].getnumP()) + ")")
         ftext.append(f)
@@ -69,14 +69,24 @@ def butt2(root,numF,numE):
     while True:
         #region process
         for i in Fl:
-            for e in range(len(elevator) -1):
-                if elevator[e].getfloorNow() == i.getnumF():
-                    elevator[e].enterP(i)
-                elevator[e].travel(Fl,elev[e],floors,c,elevt[e])
+            if len(elevator) >1:
+                for e in range(0,len(elevator)):
+                    if elevator[e].getfloorNow() == i.getnumF():
+                        elevator[e].enterP(i,numF)
+                        elevator[e].trevelcustom(Fl,elev[e],floors,c,elevt[e],e)
+            elif len(elevator) == 1:
+                if elevator[0].getfloorNow() == i.getnumF():
+                    elevator[0].enterP(i)
+                elevator[0].trevel(Fl, elev[0], floors, c, elevt[0])
         if time.clock() % 30 >= 0 and time.clock() % 30 < 4:
             addPeople(5)
+        else:
+            addPeople()
         #endregion
         c.itemconfigure(waitF,text = "Среднее время \nожидания на этаже: " + floorwait())
-        c.itemconfigure(waitE,text ="Среднее время \nожидания на этаже: " + elevatorwait())
+        c.itemconfigure(waitE,text ="Среднее время \nожидания в лифте: " + elevatorwait())
         for i in range(numF):
             c.itemconfig(ftext[i], text="(" + str(Fl[i].getnumP()) + ")")
+        for i in range(numE):
+            c.itemconfigure(elevt[i], text = "[" + elevator[i].strgetnowP() + "]")
+        build2.update()

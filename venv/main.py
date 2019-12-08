@@ -33,6 +33,12 @@ def addPeople(x = 3):
 #         if time.clock()%30 >=0 and time.clock()%30<6:
 #             addPeople(5)
 
+# def on_closing(build1,OK):
+#     print("destroy")
+#     OK = False
+#     Fl.clear()
+#     build1.destroy()
+
 def floorwait():
     wait = 0
     for i in Fl:
@@ -40,6 +46,7 @@ def floorwait():
     wait = wait/len(Fl)
     return str(wait)
 def butt1():
+    OK = True
     build1 = Toplevel(root)
     build1.minsize(width=300,height=300)
     c = Canvas(build1,width = 300, height = 300, bg = 'white')
@@ -58,17 +65,18 @@ def butt1():
     f6 = c.create_text(80, 50, text="(" + str(Fl[5].getnumP()) + ")")
     f7 = c.create_text(80, 20, text="(" + str(Fl[6].getnumP()) + ")")
     build1.update()
-    while True:
-#startreg process
+    while OK:
+#region proccess
         for i in Fl:
             if elevator.getfloorNow() == i.getnumF():
-                elevator.enterP(i)
-        elevator.trevel(Fl, el, floors, c, elt)
-        if time.clock() % 30 >= 0 and time.clock() % 30 < 4:
+                elevator.enterP(i,7)
+        c.itemconfig(elt, text="[" + str(elevator.getnowP()) + "]")
+        elevator.trevel(Fl, el, floors, c, elt,build1)
+        if time.clock() % 45 >= 0 and time.clock() % 45 < 4:
             addPeople(5)
         else:
             addPeople()
-#endreg
+#endregion
         c.itemconfig(waitE,text = "Среднее время \nожидания в лифте: "+  elevator.getTwait())
         c.itemconfig(waitF,text = "Среднее время \nожидания на этаже: "+ floorwait() )
         c.itemconfig(elt, text="[" + str(elevator.getnowP()) + "]")

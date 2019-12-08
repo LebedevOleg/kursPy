@@ -40,13 +40,25 @@ def floorwait():
         wait += i.getAllsumm()
     wait = wait/len(Fl)
     return str(wait)
-
+def floorwaitmax():
+    wait = []
+    for i in Fl:
+        wait.append(i.max())
+    temp = max(wait)
+    return str(temp)
 def elevatorwait():
     wait = 0
     for i in elevator:
         wait += i.getAllsumm()
     wait = wait/len(elevator)
     return str(wait)
+
+def elevatorwaitmax():
+    wait = []
+    for i in elevator:
+        wait.append(i.max())
+    temp = max(wait)
+    return str(temp)
 
 def butt2(root,numF,numE):
     build2 = Toplevel(root)
@@ -62,6 +74,9 @@ def butt2(root,numF,numE):
         elevt.append(elt)
     waitE = c.create_text(430,30,text = "Среднее время \nожидания в лифте: ",anchor = W)
     waitF = c.create_text(430,80,text = "Среднее время \nожидания на этаже: ",anchor = W)
+    waitEM = c.create_text(430, 110, text="Максимальное время \nожидания в лифте: ", anchor=W)
+    waitFM = c.create_text(430, 150, text="Максимальное время \nожидания на этаже: ", anchor=W)
+    # elevP = c.create_text(430,680,text = elevator,anchor=W)
     for i in range(numF):
         f = c.create_text(80,floors[i]+10 ,text = "(" + str(Fl[i].getnumP()) + ")")
         ftext.append(f)
@@ -73,7 +88,7 @@ def butt2(root,numF,numE):
                 for e in range(0,len(elevator)):
                     if elevator[e].getfloorNow() == i.getnumF():
                         elevator[e].enterP(i,numF)
-                        elevator[e].trevelcustom(Fl,elev[e],floors,c,elevt[e],e)
+                        elevator[e].trevelcustom(Fl,elev[e],floors,c,elevt[e],e,build2)
             elif len(elevator) == 1:
                 if elevator[0].getfloorNow() == i.getnumF():
                     elevator[0].enterP(i)
@@ -85,6 +100,8 @@ def butt2(root,numF,numE):
         #endregion
         c.itemconfigure(waitF,text = "Среднее время \nожидания на этаже: " + floorwait())
         c.itemconfigure(waitE,text ="Среднее время \nожидания в лифте: " + elevatorwait())
+        c.itemconfig(waitFM,text = "Максимальное время \nожидания на этаже: "+ floorwaitmax())
+        c.itemconfig(waitEM,text = "Максимальное время \nожидания в лифте: "+  elevatorwaitmax())
         for i in range(numF):
             c.itemconfig(ftext[i], text="(" + str(Fl[i].getnumP()) + ")")
         for i in range(numE):

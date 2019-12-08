@@ -8,6 +8,8 @@ class Floor:
         self.numP = []
         self.allsummt = 0  # Техническая переменная для счета среднего времени пребывания пассажира в лифте
         self.allP = 0
+        self.allPL =[]
+        self.allPL.append(0)
         self.twait = 0
     def setnumP(self,people):
         self.numP.append(people)
@@ -28,6 +30,7 @@ class Floor:
             if i.getFloor() == self.numF:
                 self.numP.remove(i)
     def timer(self,i):
+        self.allPL.append(i.gettwaitF())
         self.allsummt += i.gettwaitF()
         self.allP += 1
         self.twait = self.allsummt / self.allP
@@ -48,5 +51,6 @@ class Floor:
         temp = 20
         for i in range(numF):
             c.create_text(50,temp + i*30,text = "Floor" + str(numF - i))
-
+    def max(self):
+        return max(self.allPL)
 

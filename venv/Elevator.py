@@ -5,10 +5,13 @@ from tkinter import *
 from queue import Queue
 from fakeQueue import fakeQueue
 import time
+
 class Elevator:
     def __init__(self):
         self.allsummt = 0 #Техническая переменная для счета среднего времени пребывания пассажира в лифте
         self.allP = 0
+        self.allPL = []
+        self.allPL.append(0)
         self.twait = 0
         self.maxP = 10
         self.nowP = 0
@@ -16,23 +19,26 @@ class Elevator:
         self.floorNext = 1
         self.floorQueue = fakeQueue()
         self.person = []
+        self.type = 1
     def enterP(self,Floor,numF):
         while self.nowP != self.maxP and Floor.getnumP() > 0:
             self.person.append(Floor.getpeople())
-            self.floorQueue.add(self.person[self.nowP -1].getFloor())
+            self.floorQueue.add(self.person[len(self.person)-1].getFloor())
             self.nowP+=1
-        if self.nowP != 0:
-            for i in self.person:
-                if i.getFloor() == self.floorNow:
-                    i.settimeE()
-                    self.timer(i)
-                    self.person.remove(i)
-                    self.nowP-=1
-      #  try:
-            self.floorNext = self.floorQueue.dequeue(numF)
-        # except:
-        #     self.floorNext = -1
-        #     print("Ошибка")
+        self.delete()
+        time.sleep(1)
+        if self.type == 1:
+            self.nextfloor1(numF)
+        elif self.type == 2:
+            self.nextfloor2(numF)
+        elif self.type ==3:
+            self.nextfloor3()
+    def nextfloor1(self,numF):
+        self.floorNext = self.floorQueue.dequeue(numF)
+    def nextfloor2(self, numF):
+        self.floorNext = self.floorQueue.maxcount(numF)
+    def nextfloor3(self):
+        self.floorNext
 
     def getfloorNow(self):
         return self.floorNow
@@ -43,6 +49,7 @@ class Elevator:
     def clean(self):
         self.allsummt = 0  # Техническая переменная для счета среднего времени пребывания пассажира в лифте
         self.allP = 0
+        self.allPL = []
         self.twait = 0
         self.maxP = 10
         self.nowP = 0
@@ -60,17 +67,18 @@ class Elevator:
                     break
             self.floorNow = self.floorNext
 
-    def trevelcustom(self,floors,el,fl,c,elt,e):
+    def trevelcustom(self,floors,el,fl,c,elt,e,build2):
         if self.nowP >0 and self.floorNext != -1:
             while self.floorNext!=self.floorNow:
-                time.sleep(0.5)
+                time.sleep(0.25)
                 if self.floorNow < self.floorNext:
                     self.floorNow +=1
                 else:
                     self.floorNow -= 1
                 c.coords(el,100 + e*40,fl[self.floorNext],130 + e*40,fl[self.floorNext]+20)
                 c.coords(elt,115 + e*40,fl[self.floorNext]+10)
-            self.floorNow = self.floorNext
+                build2.update()
+
         # elif self.floorNext == -1:
         #     for i in floors:
         #         if i.getnumP() != 0:
@@ -91,7 +99,7 @@ class Elevator:
     def trevel(self,floors,el,fl,c,elt,build1):
         if self.nowP >0 and self.floorNext != -1:
             while self.floorNext!=self.floorNow:
-                time.sleep(0.5)
+                time.sleep(0.25)
                 if self.floorNow < self.floorNext:
                     self.floorNow +=1
                 else:
@@ -122,6 +130,7 @@ class Elevator:
         #     self.floorNow = self.floorNext
 
     def timer(self,i):
+     self.allPL.append(i.gettwaitE())
      self.allsummt += i.gettwaitE()
      self.allP +=1
      self.twait = self.allsummt/self.allP
@@ -129,3 +138,24 @@ class Elevator:
         return str(self.twait)
     def getAllsumm(self):
         return self.allsummt
+    def max(self):
+        return str(max(self.allPL))
+    def settype(self,type):
+        self.type = type
+    def gettype(self):
+        return str(self.type)
+    def __str__(self):
+        out = "("
+        if len(self.person):
+            for i in self.person:
+                out += str(i.getFloor()) + ") ("
+        return out + ")"
+    def delete(self):
+        if self.nowP != 0:
+            for i in self.person:
+                if i.getFloor() == self.floorNow:
+                    i.settimeE()
+                    self.timer(i)
+                    self.person.remove(i)
+                    self.nowP-=1
+                    self.delete()

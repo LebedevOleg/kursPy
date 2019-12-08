@@ -13,6 +13,13 @@ from Customizer import butt2
 floors = [190,160,130,100,70,40,10]
 elevator = Elevator()
 Fl = []
+def on_closing(build1):
+    Fl.clear()
+    global elevator
+    elevator = Elevator()
+    build1.destroy()
+    print("destroy")
+
 def printe():
     for i in range(7):
         floor = Floor(i)
@@ -32,21 +39,24 @@ def addPeople(x = 3):
 #         elevator.trevel(Fl,el,floors,c,elt)
 #         if time.clock()%30 >=0 and time.clock()%30<6:
 #             addPeople(5)
-
-# def on_closing(build1,OK):
-#     print("destroy")
-#     OK = False
-#     Fl.clear()
-#     build1.destroy()
-
 def floorwait():
     wait = 0
     for i in Fl:
         wait += i.getAllsumm()
     wait = wait/len(Fl)
     return str(wait)
+def floorwaitMax():
+    wait = []
+    for i in Fl:
+        wait.append(i.max())
+    temp = max(wait)
+    return str(temp)
 def butt1():
     OK = True
+    try:
+        elevator.settype(int(listbox.get(listbox.curselection())))
+    except:
+        print("был поставлен 1ый режим")
     build1 = Toplevel(root)
     build1.minsize(width=300,height=300)
     c = Canvas(build1,width = 300, height = 300, bg = 'white')
@@ -57,6 +67,11 @@ def butt1():
     elt = c.create_text(115,floors[0]+10,text = "[" + str(elevator.getnowP()) + "]")
     waitE = c.create_text(150,30,text = "Среднее время \nожидания в лифте: "+ elevator.getTwait(),anchor = W)
     waitF = c.create_text(150,80,text = "Среднее время \nожидания на этаже: ",anchor = W)
+    waitEM = c.create_text(150, 110, text="Максимальное время \nожидания в лифте: ", anchor=W)
+    waitFM = c.create_text(150, 150, text="Максимальное время \nожидания на этаже: ", anchor=W)
+    typeE = c.create_text(150,290,text = "тип движения: " + elevator.gettype(),anchor=W)
+    elevP = c.create_text(150,270,text = elevator)
+#region spawn
     f1 = c.create_text(80,200,text = "(" + str(Fl[0].getnumP()) + ")")
     f2 = c.create_text(80, 170, text="(" + str(Fl[1].getnumP()) + ")")
     f3 = c.create_text(80, 140, text="(" + str(Fl[2].getnumP()) + ")")
@@ -64,6 +79,7 @@ def butt1():
     f5 = c.create_text(80, 80, text="(" + str(Fl[4].getnumP()) + ")")
     f6 = c.create_text(80, 50, text="(" + str(Fl[5].getnumP()) + ")")
     f7 = c.create_text(80, 20, text="(" + str(Fl[6].getnumP()) + ")")
+#endregion
     build1.update()
     while OK:
 #region proccess
@@ -71,6 +87,7 @@ def butt1():
             if elevator.getfloorNow() == i.getnumF():
                 elevator.enterP(i,7)
         c.itemconfig(elt, text="[" + str(elevator.getnowP()) + "]")
+        c.itemconfig(elevP,text = elevator)
         elevator.trevel(Fl, el, floors, c, elt,build1)
         if time.clock() % 45 >= 0 and time.clock() % 45 < 4:
             addPeople(5)
@@ -78,7 +95,9 @@ def butt1():
             addPeople()
 #endregion
         c.itemconfig(waitE,text = "Среднее время \nожидания в лифте: "+  elevator.getTwait())
-        c.itemconfig(waitF,text = "Среднее время \nожидания на этаже: "+ floorwait() )
+        c.itemconfig(waitF,text = "Среднее время \nожидания на этаже: "+ floorwait())
+        c.itemconfig(waitFM,text = "Максимальное время \nожидания на этаже: "+ floorwaitMax())
+        c.itemconfig(waitEM,text = "Максимальное время \nожидания в лифте: "+  elevator.max())
         c.itemconfig(elt, text="[" + str(elevator.getnowP()) + "]")
         c.itemconfig(f1,text = "(" + str(Fl[0].getnumP()) + ")")
         c.itemconfig(f2,text = "(" + str(Fl[1].getnumP()) + ")")
@@ -87,6 +106,7 @@ def butt1():
         c.itemconfig(f5, text="(" + str(Fl[4].getnumP()) + ")")
         c.itemconfig(f6, text="(" + str(Fl[5].getnumP()) + ")")
         c.itemconfig(f7, text="(" + str(Fl[6].getnumP()) + ")")
+        build1.protocol('WM_DELETE_WINDOW',lambda : on_closing(build1))
         build1.update()
 def butt22():
     trash = Toplevel(root)
@@ -118,5 +138,11 @@ but1 = Button(root,text = "7 этажей 1 лифт", command = butt1)
 but1.pack()
 but2 = Button(root,text = "Кастомный дом", command = butt22)
 but2.pack()
+l1 = Label(root,text = "Выберите тип передвижения: ")
+l1.pack()
+listbox = Listbox(root,height = 4, width = 8, selectmode = SINGLE)
+for i in range(1,4):
+    listbox.insert(END,i)
+listbox.pack()
 
 root.mainloop()

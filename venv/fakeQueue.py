@@ -16,6 +16,18 @@ class fakeQueue:
             return None
         self.queue.append(x)
     def dequeue(self,numF):
-        if not self.queue:
-            return (random.randint(0,numF-1))
-        return self.queue.pop(0)
+        try:
+            return self.queue.pop(random.randint(0,len(self.queue)-1))
+        except:
+            return random.randint(0,numF-1)
+    def maxcount(self,numF):
+        temp = 0
+        n = 0
+        #x = 0
+        for i in range(0,numF):
+            if temp < self.queue.count(i):
+                n = i
+                temp = self.queue.count(i)
+                #x = self.queue.index(n)
+        self.queue = list(filter(lambda a: a!=n,self.queue))
+        return n

@@ -85,7 +85,7 @@ def butt1():
 #region proccess
         for i in Fl:
             if elevator.getfloorNow() == i.getnumF():
-                elevator.enterP(i,7)
+                elevator.enterP(i,7,Fl,[])
         c.itemconfig(elt, text="[" + str(elevator.getnowP()) + "]")
         c.itemconfig(elevP,text = elevator)
         elevator.trevel(Fl, el, floors, c, elt,build1)
@@ -109,28 +109,32 @@ def butt1():
         build1.protocol('WM_DELETE_WINDOW',lambda : on_closing(build1))
         build1.update()
 def butt22():
+    try:
+        type = int(listbox.get(listbox.curselection()))
+    except:
+        type = 1
+        print("был поставлен 1ый режим")
     trash = Toplevel(root)
     label1 = Label(trash,text = "Введите колличество этажей")
     textA =Entry(trash)
     label2 = Label(trash,text = "Введите колличество лифтов")
     textB = Entry(trash)
-    but = Button(trash,text = "Запуск",command = lambda: com1(textA,textB))
+    but = Button(trash,text = "Запуск",command = lambda: com1(textA,textB,type))
     label1.grid(column=0, row=0)
     textA.grid(column=0, row=1)
     label2.grid(column=1, row=0)
     textB.grid(column=1, row=1)
     but.grid(column=1, row=2)
-def com1(textA,textB):
+def com1(textA,textB,type):
     numF = textA.get()
     numE = textB.get()
     try:
-      if int(numF) <0 or int(numE) < 0:
+      if (int(numF) <0 or int(numE) < 0) or (int(numF) >= 21 or int(numE)>=5) or (numF == '' or numE == ''):
             messagebox.showinfo("Error","Вы ввели неправильные данные")
       else:
-            butt2(root,int(numF),int(numE))
+            butt2(root,int(numF),int(numE),type)
     except:
-        messagebox.showinfo("Error", traceback.format_exc() )
-
+        print("Error" + traceback.format_exc() )
 
 root =Tk()
 
@@ -141,7 +145,7 @@ but2.pack()
 l1 = Label(root,text = "Выберите тип передвижения: ")
 l1.pack()
 listbox = Listbox(root,height = 4, width = 8, selectmode = SINGLE)
-for i in range(1,4):
+for i in range(1,5):
     listbox.insert(END,i)
 listbox.pack()
 

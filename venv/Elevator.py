@@ -20,7 +20,8 @@ class Elevator:
         self.floorQueue = fakeQueue()
         self.person = []
         self.type = 1
-    def enterP(self,Floor,numF):
+        self.cheak = 0
+    def enterP(self,Floor,numF,Floors,elevators):
         while self.nowP != self.maxP and Floor.getnumP() > 0:
             self.person.append(Floor.getpeople())
             self.floorQueue.add(self.person[len(self.person)-1].getFloor())
@@ -32,13 +33,29 @@ class Elevator:
         elif self.type == 2:
             self.nextfloor2(numF)
         elif self.type ==3:
-            self.nextfloor3()
+            self.nextfloor3(numF,Floors)
+        elif self.type == 4:
+            self.nextfloor4()
+       # if len(elevators) > 0:
+        #    for i in elevators:
+         #       if i.getfloornext() == self.getfloornext() and i.get != self.getTwait():
+          #          self.floorNext +=1
     def nextfloor1(self,numF):
         self.floorNext = self.floorQueue.dequeue(numF)
     def nextfloor2(self, numF):
         self.floorNext = self.floorQueue.maxcount(numF)
-    def nextfloor3(self):
-        self.floorNext
+    def nextfloor3(self,numF,floors):
+        if self.nowP<6:
+            trash =[]
+            for i in floors:
+                trash.append(i.getnumP())
+            if self.floorNow != trash.index(max(trash)):
+                self.floorNext = trash.index(max(trash))
+        else:
+            self.floorNext = self.floorQueue.maxcount(numF)
+
+
+
 
     def getfloorNow(self):
         return self.floorNow
@@ -57,6 +74,11 @@ class Elevator:
         self.floorNext = 1
         self.floorQueue.clear()
         self.person = []
+        self.cheak = 0
+    def cheakt(self):
+        return self.cheak
+    def setcheak(self,cheak):
+        self.cheak = cheak
     def trevelt(self,floors):
         if self.nowP >0 and self.floorNext != 0:
             self.floorNow = self.floorNext
@@ -68,16 +90,19 @@ class Elevator:
             self.floorNow = self.floorNext
 
     def trevelcustom(self,floors,el,fl,c,elt,e,build2):
-        if self.nowP >0 and self.floorNext != -1:
-            while self.floorNext!=self.floorNow:
-                time.sleep(0.25)
-                if self.floorNow < self.floorNext:
-                    self.floorNow +=1
-                else:
-                    self.floorNow -= 1
-                c.coords(el,100 + e*40,fl[self.floorNext],130 + e*40,fl[self.floorNext]+20)
-                c.coords(elt,115 + e*40,fl[self.floorNext]+10)
-                build2.update()
+        if self.nowP >-1 and self.floorNext != -1 and self.floorNext != self.floorNow:
+            #while self.floorNext!=self.floorNow:
+            #time.sleep(0.25)
+            if self.floorNow < self.floorNext:
+                self.floorNow +=1
+            else:
+                self.floorNow -= 1
+            c.coords(el,100 + e*40,fl[self.floorNow],130 + e*40,fl[self.floorNow]+20)
+            c.coords(elt,115 + e*40,fl[self.floorNow]+10)
+            if self.floorNow == self.floorNext:
+                self.cheak = 1
+
+
 
         # elif self.floorNext == -1:
         #     for i in floors:
@@ -159,3 +184,9 @@ class Elevator:
                     self.person.remove(i)
                     self.nowP-=1
                     self.delete()
+    def setfloorNow(self,nowF):
+        self.floorNow = nowF
+    def getfloornow(self):
+        return self.floorNow
+    def getfloornext(self):
+        return self.floorNext

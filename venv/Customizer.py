@@ -12,9 +12,21 @@ elevator = []
 Fl = []
 elev = []
 elevt = []
+Elevators = []
 ftext = []
+def move(build2,elev,c,elevt,numF,type):
+    for e in range(0,len(elevator)):
+        elevator[e].trevelcustom(Fl, elev[e], floors, c, elevt[e], e, build2)
+    build2.update()
+    time.sleep(0.25)
+    for e in range(0,len(elevator)):
+        if elevator[e].cheakt() == 0:
+            if type == 4:
+                elevator[e].enterP(Fl[elevator[e].getfloornow()],numF,Fl,elevator)
+            move(build2,elev,c,elevt,numF,type)
 
-def printe(numF,numE):
+
+def printe(numF,numE,type):
     temp = 10
     for i in range(numF):
         floor = Floor(i)
@@ -25,6 +37,8 @@ def printe(numF,numE):
     floors.reverse()
     for i in range(numE):
         el = Elevator()
+        el.setfloorNow(random.randint(0,numF-1))
+        el.settype(type)
         elevator.append(el)
     print(floors[0])
 
@@ -60,23 +74,27 @@ def elevatorwaitmax():
     temp = max(wait)
     return str(temp)
 
-def butt2(root,numF,numE):
+def butt2(root,numF,numE,type):
     build2 = Toplevel(root)
     build2.minsize(width=600,height=700)
     c = Canvas(build2,width = 600,height = 700,bg = 'white')
     c.pack()
-    printe(numF,numE)
+    if type == 4:
+        printe(numF,numE,type-1)
+    else:
+        printe(numF, numE, type)
     Fl[0].build2(build2,c,numF)
     for i in range(numE):
-        el = c.create_rectangle(100+ i*40,floors[0],130+ i*40,floors[0]+20,outline = 'BLACK')
-        elt = c.create_text(115 + i*40,floors[0]+10,text = "[" + str(elevator[i].getnowP()) + "]")
+        el = c.create_rectangle(100+ i*40,floors[elevator[i].getfloornow()],130+ i*40,floors[elevator[i].getfloornow()]+20,outline = 'BLACK')
+        elt = c.create_text(115 + i*40,floors[elevator[i].getfloornow()]+10,text = "[" + str(elevator[i].getnowP()) + "]")
+        Elevator = c.create_text(500, 500+i*40, text = elevator[i])
+        Elevators.append(Elevator)
         elev.append(el)
         elevt.append(elt)
     waitE = c.create_text(430,30,text = "Среднее время \nожидания в лифте: ",anchor = W)
     waitF = c.create_text(430,80,text = "Среднее время \nожидания на этаже: ",anchor = W)
     waitEM = c.create_text(430, 110, text="Максимальное время \nожидания в лифте: ", anchor=W)
     waitFM = c.create_text(430, 150, text="Максимальное время \nожидания на этаже: ", anchor=W)
-    # elevP = c.create_text(430,680,text = elevator,anchor=W)
     for i in range(numF):
         f = c.create_text(80,floors[i]+10 ,text = "(" + str(Fl[i].getnumP()) + ")")
         ftext.append(f)
@@ -87,13 +105,20 @@ def butt2(root,numF,numE):
             if len(elevator) >1:
                 for e in range(0,len(elevator)):
                     if elevator[e].getfloorNow() == i.getnumF():
-                        elevator[e].enterP(i,numF)
-                        elevator[e].trevelcustom(Fl,elev[e],floors,c,elevt[e],e,build2)
+                        elevator[e].enterP(i,numF,Fl,elevator)
+                        c.itemconfigure(elevt[e], text="[" + elevator[e].strgetnowP() + "]")
+                        c.itemconfig(Elevators[e], text=elevator[e])
             elif len(elevator) == 1:
                 if elevator[0].getfloorNow() == i.getnumF():
-                    elevator[0].enterP(i)
-                elevator[0].trevel(Fl, elev[0], floors, c, elevt[0])
-        if time.clock() % 30 >= 0 and time.clock() % 30 < 4:
+                    elevator[0].enterP(i, numF, Fl)
+                    elevator[0].trevel(Fl, elev[0], floors, c, elevt[0])
+        move(build2,elev,c,elevt,numF,type)
+        for e in range(0, len(elevator)):
+            elevator[e].setcheak(0)
+        # for e in range(0, len(elevator)):
+        #     elevator[e].trevelcustom(Fl,elev[e],floors,c,elevt[e],e,build2)
+        #     build2.update()
+        if time.clock() % 45 >= 0 and time.clock() % 45 < 4:
             addPeople(5)
         else:
             addPeople()
@@ -107,3 +132,5 @@ def butt2(root,numF,numE):
         for i in range(numE):
             c.itemconfigure(elevt[i], text = "[" + elevator[i].strgetnowP() + "]")
         build2.update()
+        print("end")
+      #  build2.update()

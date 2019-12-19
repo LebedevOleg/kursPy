@@ -13,6 +13,16 @@ from Customizer import butt2
 floors = [190,160,130,100,70,40,10]
 elevator = Elevator()
 Fl = []
+def move(el,c,elt,build1,elevP):
+    elevator.trevel4(Fl, el, floors, c, elt, build1)
+    c.itemconfig(elt, text="[" + str(elevator.getnowP()) + "]")
+    c.itemconfig(elevP, text=elevator)
+    build1.update()
+    time.sleep(0.25)
+    if elevator.cheakt() == 0:
+        elevator.ent(Fl[elevator.getfloorNow()],Fl)
+        move(el,c,elt,build1,elevP)
+
 def on_closing(build1):
     Fl.clear()
     global elevator
@@ -26,7 +36,8 @@ def printe():
         p = People(6)
         floor.setnumP(p)
         Fl.append(floor)
-def addPeople(x = 3):
+        addPeople()
+def addPeople(x = 6):
     for j in range(1,random.randint(1,x)):
         for i in range(0,random.randint(1,len(Fl))):
             p = People(len(Fl)-1)
@@ -53,8 +64,12 @@ def floorwaitMax():
     return str(temp)
 def butt1():
     OK = True
+    type = int(listbox.get(listbox.curselection()))
     try:
-        elevator.settype(int(listbox.get(listbox.curselection())))
+        # if type == 4:
+        #     elevator.settype(type)
+        # else:
+            elevator.settype(type)
     except:
         print("был поставлен 1ый режим")
     build1 = Toplevel(root)
@@ -88,9 +103,13 @@ def butt1():
                 elevator.enterP(i,7,Fl,[])
         c.itemconfig(elt, text="[" + str(elevator.getnowP()) + "]")
         c.itemconfig(elevP,text = elevator)
-        elevator.trevel(Fl, el, floors, c, elt,build1)
-        if time.clock() % 45 >= 0 and time.clock() % 45 < 4:
-            addPeople(5)
+        if type != 4:
+            elevator.trevel(Fl, el, floors, c, elt,build1)
+        else:
+            elevator.setcheak(0)
+            move(el,c,elt,build1,elevP)
+        if time.clock() % 45 >= 0 and time.clock() % 45 < 10:
+            addPeople(10)
         else:
             addPeople()
 #endregion

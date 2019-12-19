@@ -22,7 +22,7 @@ def move(build2,elev,c,elevt,numF,type):
     for e in range(0,len(elevator)):
         if elevator[e].cheakt() == 0:
             if type == 4:
-                elevator[e].enterP(Fl[elevator[e].getfloornow()],numF,Fl,elevator)
+                elevator[e].ent(Fl[elevator[e].getfloornow()],Fl)
             move(build2,elev,c,elevt,numF,type)
 
 
